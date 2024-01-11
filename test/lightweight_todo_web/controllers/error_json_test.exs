@@ -2,7 +2,9 @@ defmodule LightweightTodoWeb.ErrorJSONTest do
   use LightweightTodoWeb.ConnCase, async: true
 
   test "renders 404" do
-    assert LightweightTodoWeb.ErrorJSON.render("404.json", %{}) == %{errors: %{detail: "Not Found"}}
+    assert LightweightTodoWeb.ErrorJSON.render("404.json", %{}) == %{
+             errors: %{detail: "Not Found"}
+           }
   end
 
   test "renders 500" do
