@@ -1,0 +1,56 @@
+on: [push]
+name: build
+jobs:
+  build:
+    # PostgreSQL setup according to [postgres-setup].
+    #
+    # [postgres-setup]: https://help.github.com/en/actions/configuring-and-managing-workflows/creating-postgresql-service-containers
+    runs-on: ubuntu-20.04
+
+    services:
+      postgres:
+        image: postgres
+
+        env:
+          POSTGRES_USER: lightweight_todo
+          POSTGRES_PASSWORD: lightweight_todo
+          # We prefer to explicitly set `POSTGRES_DB`.
+          #
+          # “If it is not specified, then the value of POSTGRES_USER will be
+          # used.”
+          #
+          # https://hub.docker.com/_/postgres
+          POSTGRES_DB: lightweight_todo_test
+
+        options: >-
+          --health-cmd pg_isready
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 5
+
+        ports:
+          - 5432:5432
+
+    strategy:
+      matrix:
+        otp: [ '26.2' ]
+        elixir: [ '1.15.7', '1.16.0' ]
+
+    name: OTP ${{matrix.otp}}, Elixir ${{matrix.elixir}}
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Set up Elixir [OTP ${{ matrix.otp }}, Elixir ${{ matrix.elixir }}]
+        uses: erlef/setup-beam@v1
+        with:
+          otp-version: ${{ matrix.otp }}
+          elixir-version: ${{ matrix.elixir }}
+
+      - name: Setup project
+        run: mix setup
+
+      - name: Run tests
+        run: mix test
+
+      - name: Check formatting
+        run: mix format --check-formatted
