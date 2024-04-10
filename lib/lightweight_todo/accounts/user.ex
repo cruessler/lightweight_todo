@@ -1,4 +1,5 @@
 defmodule LightweightTodo.Accounts.User do
+  alias LightweightTodo.Tasks.Task
   use Ecto.Schema
   import Ecto.Changeset
 
@@ -7,6 +8,8 @@ defmodule LightweightTodo.Accounts.User do
     field :password, :string, virtual: true, redact: true
     field :hashed_password, :string, redact: true
     field :confirmed_at, :naive_datetime
+
+    has_many :tasks, Task
 
     timestamps(type: :utc_datetime)
   end
