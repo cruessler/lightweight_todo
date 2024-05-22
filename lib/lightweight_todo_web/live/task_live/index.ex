@@ -38,6 +38,22 @@ defmodule LightweightTodoWeb.TaskLive.Index do
   end
 
   @impl true
+  def handle_event("mark_as_completed", %{"id" => id}, socket) do
+    task = Tasks.get_task!(socket.assigns.current_user, id)
+    {:ok, updated_task} = Tasks.update_task(task, %{status: "completed"})
+
+    {:noreply, stream_insert(socket, :tasks, updated_task)}
+  end
+
+  @impl true
+  def handle_event("mark_as_todo", %{"id" => id}, socket) do
+    task = Tasks.get_task!(socket.assigns.current_user, id)
+    {:ok, updated_task} = Tasks.update_task(task, %{status: "created"})
+
+    {:noreply, stream_insert(socket, :tasks, updated_task)}
+  end
+
+  @impl true
   def handle_event("delete", %{"id" => id}, socket) do
     task = Tasks.get_task!(socket.assigns.current_user, id)
     {:ok, _} = Tasks.delete_task(task)
