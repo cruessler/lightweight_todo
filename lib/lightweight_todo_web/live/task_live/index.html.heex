@@ -12,6 +12,7 @@
   rows={@streams.tasks}
   row_click={fn {_id, task} -> JS.navigate(~p"/tasks/#{task}") end}
 >
+  <:col :let={{_id, task}} label="Status"><%= task.status %></:col>
   <:col :let={{_id, task}} label="Title"><%= task.title %></:col>
   <:col :let={{_id, task}} label="Body"><%= task.body %></:col>
   <:action :let={{_id, task}}>
@@ -19,6 +20,20 @@
       <.link navigate={~p"/tasks/#{task}"}>Show</.link>
     </div>
     <.link patch={~p"/tasks/#{task}/edit"}>Edit</.link>
+  </:action>
+  <:action :let={{_id, task}}>
+    <.link
+      :if={task.status != :completed}
+      phx-click={JS.push("mark_as_completed", value: %{id: task.id})}
+    >
+      Mark as completed
+    </.link>
+    <.link
+      :if={task.status == :completed}
+      phx-click={JS.push("mark_as_todo", value: %{id: task.id})}
+    >
+      Mark as todo
+    </.link>
   </:action>
   <:action :let={{id, task}}>
     <.link
