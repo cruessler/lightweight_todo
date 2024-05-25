@@ -33,6 +33,16 @@ defmodule LightweightTodo.TasksTest do
       assert task.body == "some body"
     end
 
+    test "create_task/2 with empty body creates a task" do
+      user = user_fixture()
+
+      valid_attrs = %{title: "some title", body: ""}
+
+      assert {:ok, %Task{} = task} = Tasks.create_task(user, valid_attrs)
+      assert task.title == "some title"
+      assert task.body == ""
+    end
+
     test "create_task/2 with invalid data returns error changeset" do
       user = user_fixture()
       assert {:error, %Ecto.Changeset{}} = Tasks.create_task(user, @invalid_attrs)
