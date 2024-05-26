@@ -21,7 +21,7 @@ defmodule LightweightTodoWeb.TaskLiveTest do
       |> init_test_session(%{})
       |> put_session(:user_token, user_token)
 
-    %{task: task, conn: conn}
+    %{user: user, task: task, conn: conn}
   end
 
   describe "Index" do
@@ -83,6 +83,46 @@ defmodule LightweightTodoWeb.TaskLiveTest do
 
       assert index_live |> element("#tasks-#{task.id} a", "Delete") |> render_click()
       refute has_element?(index_live, "#tasks-#{task.id}")
+    end
+
+    test "updates sort order when task is marked as completed and todo in listing", %{
+      user: user,
+      conn: conn,
+      task: task
+    } do
+      second_task = task_fixture(user)
+
+      {:ok, index_live, _html} = live(conn, ~p"/tasks")
+
+      assert task.id < second_task.id
+
+      index_live
+      |> element("#tasks-#{second_task.id} + #tasks-#{task.id} a", "Mark as completed")
+      |> render_click()
+
+      assert index_live
+             |> element("#tasks-#{second_task.id} + #tasks-#{task.id} td:nth-child(4)")
+             |> render() =~
+               "Mark as todo"
+
+      assert index_live
+             |> element("#tasks-#{second_task.id} + #tasks-#{task.id} td:first-child")
+             |> render() =~
+               "completed"
+
+      index_live
+      |> element("#tasks-#{second_task.id} + #tasks-#{task.id} a", "Mark as todo")
+      |> render_click()
+
+      assert index_live
+             |> element("#tasks-#{second_task.id} + #tasks-#{task.id} td:nth-child(4)")
+             |> render() =~
+               "Mark as completed"
+
+      assert index_live
+             |> element("#tasks-#{second_task.id} + #tasks-#{task.id} td:first-child")
+             |> render() =~
+               "created"
     end
   end
 
