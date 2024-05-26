@@ -4,9 +4,19 @@ defmodule LightweightTodoWeb.TaskLive.Index do
   alias LightweightTodo.Tasks
   alias LightweightTodo.Tasks.Task
 
+  defp list_sorted_tasks(user) do
+    Tasks.list_tasks(user)
+    |> Enum.sort(&Task.compare_by_status/2)
+  end
+
   @impl true
   def mount(_params, _session, socket) do
-    {:ok, stream(socket, :tasks, Tasks.list_tasks(socket.assigns.current_user))}
+    {:ok,
+     stream(
+       socket,
+       :tasks,
+       list_sorted_tasks(socket.assigns.current_user)
+     )}
   end
 
   @impl true
@@ -42,7 +52,8 @@ defmodule LightweightTodoWeb.TaskLive.Index do
     task = Tasks.get_task!(socket.assigns.current_user, id)
     {:ok, _updated_task} = Tasks.update_task(task, %{status: "completed"})
 
-    {:noreply, stream(socket, :tasks, Tasks.list_tasks(socket.assigns.current_user), reset: true)}
+    {:noreply,
+     stream(socket, :tasks, list_sorted_tasks(socket.assigns.current_user), reset: true)}
   end
 
   @impl true
@@ -50,7 +61,8 @@ defmodule LightweightTodoWeb.TaskLive.Index do
     task = Tasks.get_task!(socket.assigns.current_user, id)
     {:ok, _updated_task} = Tasks.update_task(task, %{status: "created"})
 
-    {:noreply, stream(socket, :tasks, Tasks.list_tasks(socket.assigns.current_user), reset: true)}
+    {:noreply,
+     stream(socket, :tasks, list_sorted_tasks(socket.assigns.current_user), reset: true)}
   end
 
   @impl true

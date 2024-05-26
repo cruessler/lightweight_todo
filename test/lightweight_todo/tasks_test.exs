@@ -77,5 +77,15 @@ defmodule LightweightTodo.TasksTest do
       task = task_fixture(user)
       assert %Ecto.Changeset{} = Tasks.change_task(task)
     end
+
+    test "sorting with compare_by_status/2 returns open tasks first" do
+      user = user_fixture()
+      first_task = task_fixture(user, %{status: :completed})
+      second_task = task_fixture(user, %{status: :created})
+      third_task = task_fixture(user, %{status: :created})
+
+      assert [%{status: :created}, %{status: :created}, %{status: :completed}] =
+               [first_task, second_task, third_task] |> Enum.sort(&Task.compare_by_status/2)
+    end
   end
 end

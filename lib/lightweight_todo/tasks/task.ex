@@ -23,4 +23,17 @@ defmodule LightweightTodo.Tasks.Task do
     |> validate_required([:title])
     |> assoc_constraint(:user)
   end
+
+  def compare_by_status(a, b) do
+    case {a.status, b.status} do
+      {:created, _} ->
+        true
+
+      {:completed, :completed} ->
+        true
+
+      _ ->
+        false
+    end
+  end
 end
