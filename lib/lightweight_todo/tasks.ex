@@ -21,6 +21,7 @@ defmodule LightweightTodo.Tasks do
   def list_tasks(%User{} = user) do
     user
     |> Ecto.assoc(:tasks)
+    |> order_by(desc: :id)
     |> Repo.all()
   end
 
