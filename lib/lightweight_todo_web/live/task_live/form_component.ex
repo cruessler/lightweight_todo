@@ -75,7 +75,7 @@ defmodule LightweightTodoWeb.TaskLive.FormComponent do
 
     case Tasks.create_task(user, task_params) do
       {:ok, task} ->
-        notify_parent({:saved, task})
+        notify_parent({:created, task})
 
         {:noreply,
          socket

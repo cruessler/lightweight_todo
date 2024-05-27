@@ -43,6 +43,11 @@ defmodule LightweightTodoWeb.TaskLive.Index do
   end
 
   @impl true
+  def handle_info({LightweightTodoWeb.TaskLive.FormComponent, {:created, task}}, socket) do
+    {:noreply, stream_insert(socket, :tasks, task, at: 0)}
+  end
+
+  @impl true
   def handle_info({LightweightTodoWeb.TaskLive.FormComponent, {:saved, task}}, socket) do
     {:noreply, stream_insert(socket, :tasks, task)}
   end
