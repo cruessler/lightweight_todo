@@ -85,6 +85,16 @@ defmodule LightweightTodoWeb.TaskLiveTest do
       refute has_element?(index_live, "#tasks-#{task.id}")
     end
 
+    test "marks task as completed and todo in listing", %{conn: conn, task: task} do
+      {:ok, index_live, _html} = live(conn, ~p"/tasks")
+
+      assert index_live |> element("#tasks-#{task.id} a", "Mark as completed") |> render_click() =~
+               "Mark as todo"
+
+      assert index_live |> element("#tasks-#{task.id} a", "Mark as todo") |> render_click() =~
+               "Mark as completed"
+    end
+
     test "updates sort order when task is marked as completed and todo in listing", %{
       user: user,
       conn: conn,
@@ -124,16 +134,6 @@ defmodule LightweightTodoWeb.TaskLiveTest do
              |> render() =~
                "created"
     end
-  end
-
-  test "marks task as completed and todo in listing", %{conn: conn, task: task} do
-    {:ok, index_live, _html} = live(conn, ~p"/tasks")
-
-    assert index_live |> element("#tasks-#{task.id} a", "Mark as completed") |> render_click() =~
-             "Mark as todo"
-
-    assert index_live |> element("#tasks-#{task.id} a", "Mark as todo") |> render_click() =~
-             "Mark as completed"
   end
 
   describe "Show" do
