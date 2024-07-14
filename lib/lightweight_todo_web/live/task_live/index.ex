@@ -5,7 +5,7 @@ defmodule LightweightTodoWeb.TaskLive.Index do
   alias LightweightTodo.Tasks.Task
 
   defp list_sorted_tasks(user) do
-    Tasks.list_tasks(user)
+    Tasks.list_root_tasks(user)
     |> Enum.sort(&Task.compare_by_status/2)
   end
 

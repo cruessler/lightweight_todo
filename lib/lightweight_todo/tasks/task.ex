@@ -1,10 +1,13 @@
 defmodule LightweightTodo.Tasks.Task do
   use Ecto.Schema
   import Ecto.Changeset
+  alias LightweightTodo.Tasks.Task
   alias LightweightTodo.Accounts.User
 
   schema "tasks" do
     belongs_to :user, User
+    belongs_to :parent, Task, foreign_key: :parent_id
+    has_many :children, Task, foreign_key: :parent_id
 
     field :title, :string
     # Ecto converts an empty string to `nil`, but we want to keep the empty

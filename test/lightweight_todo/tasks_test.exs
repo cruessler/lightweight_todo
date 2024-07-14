@@ -11,10 +11,16 @@ defmodule LightweightTodo.TasksTest do
 
     @invalid_attrs %{title: nil, body: nil}
 
-    test "list_tasks/1 returns all tasks" do
+    test "list_root_tasks/1 returns all tasks" do
       user = user_fixture()
       task = task_fixture(user)
-      assert Tasks.list_tasks(user) == [task]
+      assert Tasks.list_root_tasks(user) == [task]
+    end
+
+    test "list_sub_tasks/1 returns all sub-tasks belonging to a given parent task" do
+      user = user_fixture()
+      %{parent_task: parent_task, sub_task: sub_task} = parent_task_fixture(user)
+      assert Tasks.list_sub_tasks(parent_task) == [sub_task]
     end
 
     test "get_task!/2 returns the task with given id" do
@@ -46,6 +52,20 @@ defmodule LightweightTodo.TasksTest do
     test "create_task/2 with invalid data returns error changeset" do
       user = user_fixture()
       assert {:error, %Ecto.Changeset{}} = Tasks.create_task(user, @invalid_attrs)
+    end
+
+    test "create_task/2 with valid data creates a sub-task" do
+      user = user_fixture()
+      parent_task = task_fixture(user)
+
+      valid_attrs = %{title: "some title", body: "some body"}
+
+      assert {:ok, %Task{} = sub_task} = Tasks.create_task(parent_task, valid_attrs)
+      assert sub_task.title == "some title"
+      assert sub_task.body == "some body"
+      assert sub_task.parent_id == parent_task.id
+
+      assert Tasks.list_sub_tasks(parent_task) == [sub_task]
     end
 
     test "update_task/2 with valid data updates the task" do

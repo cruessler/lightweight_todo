@@ -14,13 +14,30 @@ defmodule LightweightTodo.Tasks do
 
   ## Examples
 
-      iex> list_tasks(user)
+      iex> list_root_tasks(user)
       [%Task{}, ...]
 
   """
-  def list_tasks(%User{} = user) do
+  def list_root_tasks(%User{} = user) do
     user
     |> Ecto.assoc(:tasks)
+    |> where([t], is_nil(t.parent_id))
+    |> order_by(desc: :id)
+    |> Repo.all()
+  end
+
+  @doc """
+  Returns the list of tasks that belong to a given parent task.
+
+  ## Examples
+
+      iex> list_sub_tasks(parent_task)
+      [%Task{}, ...]
+
+  """
+  def list_sub_tasks(%Task{} = parent_task) do
+    parent_task
+    |> Ecto.assoc(:children)
     |> order_by(desc: :id)
     |> Repo.all()
   end
@@ -45,8 +62,10 @@ defmodule LightweightTodo.Tasks do
     |> Repo.get!(id)
   end
 
+  def create_task(assoc, attrs \\ %{})
+
   @doc """
-  Creates a task.
+  Creates a task or sub-task.
 
   ## Examples
 
@@ -56,10 +75,23 @@ defmodule LightweightTodo.Tasks do
       iex> create_task(user, %{field: bad_value})
       {:error, %Ecto.Changeset{}}
 
+      iex> create_task(parent_task, %{field: value})
+      {:ok, %Task{}}
+
+      iex> create_task(parent_task, %{field: bad_value})
+      {:error, %Ecto.Changeset{}}
+
   """
-  def create_task(%User{} = user, attrs \\ %{}) do
+  def create_task(%User{} = user, attrs) do
     user
     |> Ecto.build_assoc(:tasks)
+    |> Task.changeset(attrs)
+    |> Repo.insert()
+  end
+
+  def create_task(%Task{} = parent_task, attrs) do
+    parent_task
+    |> Ecto.build_assoc(:children)
     |> Task.changeset(attrs)
     |> Repo.insert()
   end
