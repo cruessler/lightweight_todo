@@ -4,6 +4,7 @@ defmodule LightweightTodo.TasksFixtures do
   entities via the `LightweightTodo.Tasks` context.
   """
   alias LightweightTodo.Accounts.User
+  alias LightweightTodo.Tasks.Task
 
   @doc """
   Generate a task.
@@ -47,5 +48,19 @@ defmodule LightweightTodo.TasksFixtures do
       LightweightTodo.Tasks.create_task(parent_task, sub_task_attrs)
 
     %{parent_task: parent_task, sub_task: sub_task}
+  end
+
+  def sub_task_fixture(%Task{} = parent_task, attrs \\ %{}) do
+    sub_task_attrs =
+      attrs
+      |> Enum.into(%{
+        body: "sub-task body",
+        title: "sub-task title"
+      })
+
+    {:ok, sub_task} =
+      LightweightTodo.Tasks.create_task(parent_task, sub_task_attrs)
+
+    sub_task
   end
 end

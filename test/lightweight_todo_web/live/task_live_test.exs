@@ -14,6 +14,7 @@ defmodule LightweightTodoWeb.TaskLiveTest do
     user = user_fixture()
     user_token = Accounts.generate_user_session_token(user)
     task = task_fixture(user)
+    sub_task = sub_task_fixture(task)
 
     conn =
       conn
@@ -21,7 +22,7 @@ defmodule LightweightTodoWeb.TaskLiveTest do
       |> init_test_session(%{})
       |> put_session(:user_token, user_token)
 
-    %{user: user, task: task, conn: conn}
+    %{user: user, task: task, sub_task: sub_task, conn: conn}
   end
 
   describe "Index" do
@@ -137,11 +138,12 @@ defmodule LightweightTodoWeb.TaskLiveTest do
   end
 
   describe "Show" do
-    test "displays task", %{conn: conn, task: task} do
+    test "displays task and list of sub-tasks", %{conn: conn, task: task, sub_task: sub_task} do
       {:ok, _show_live, html} = live(conn, ~p"/tasks/#{task}")
 
       assert html =~ "Show Task"
       assert html =~ task.title
+      assert html =~ sub_task.title
     end
 
     test "updates task within modal", %{conn: conn, task: task} do
