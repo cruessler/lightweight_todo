@@ -13,6 +13,16 @@
   <:item title="Body"><%= @task.body %></:item>
 </.list>
 
+<.table
+  id="sub-tasks"
+  rows={@streams.sub_tasks}
+  row_click={fn {_id, task} -> JS.navigate(~p"/tasks/#{task}") end}
+>
+  <:col :let={{_id, task}} label="Status"><%= task.status %></:col>
+  <:col :let={{_id, task}} label="Title"><%= task.title %></:col>
+  <:col :let={{_id, task}} label="Body"><%= task.body %></:col>
+</.table>
+
 <.back navigate={~p"/tasks"}>Back to tasks</.back>
 
 <.modal :if={@live_action == :edit} id="task-modal" show on_cancel={JS.patch(~p"/tasks/#{@task}")}>

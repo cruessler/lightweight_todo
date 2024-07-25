@@ -93,6 +93,7 @@ defmodule LightweightTodo.Tasks do
     parent_task
     |> Ecto.build_assoc(:children)
     |> Task.changeset(attrs)
+    |> Ecto.Changeset.change(%{user_id: parent_task.user_id})
     |> Repo.insert()
   end
 
