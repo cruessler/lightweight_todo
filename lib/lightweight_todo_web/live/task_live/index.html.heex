@@ -12,9 +12,9 @@
   rows={@streams.tasks}
   row_click={fn {_id, task} -> JS.navigate(~p"/tasks/#{task}") end}
 >
-  <:col :let={{_id, task}} label="Status"><%= task.status %></:col>
-  <:col :let={{_id, task}} label="Title"><%= task.title %></:col>
-  <:col :let={{_id, task}} label="Body"><%= task.body %></:col>
+  <:col :let={{_id, task}} label="Status">{task.status}</:col>
+  <:col :let={{_id, task}} label="Title">{task.title}</:col>
+  <:col :let={{_id, task}} label="Body">{task.body}</:col>
   <:action :let={{_id, task}}>
     <div class="sr-only">
       <.link navigate={~p"/tasks/#{task}"}>Show</.link>
