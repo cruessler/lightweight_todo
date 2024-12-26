@@ -3,11 +3,13 @@ updates:
   - package-ecosystem: mix
     directory: "/"
     schedule:
-      interval: monthly
-      time: "02:00"
+      interval: weekly
+      day: wednesday
+    ignore:
+      - update-types: ["version-update:semver-patch"]
 
   - package-ecosystem: github-actions
     directory: "/"
     schedule:
-      interval: monthly
-      time: "02:00"
+      interval: weekly
+      day: wednesday
