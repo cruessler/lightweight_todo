@@ -6,6 +6,8 @@ updates:
       interval: weekly
       day: wednesday
     ignore:
+      # `dependency-name` is required.
+      - dependency-name: "*"
       - update-types: ["version-update:semver-patch"]
 
   - package-ecosystem: github-actions
