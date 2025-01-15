@@ -16,3 +16,22 @@ Ready to run in production? Please [check our deployment guides](https://hexdocs
   * Docs: https://hexdocs.pm/phoenix
   * Forum: https://elixirforum.com/c/phoenix-forum
   * Source: https://github.com/phoenixframework/phoenix
+
+# Setup
+
+## Database setup
+
+```
+# connect to a Postgres server
+psql …
+
+postgres=# create role lightweight_todo password 'lightweight_todo' login;
+CREATE ROLE
+postgres=# create database lightweight_todo_test owner lightweight_todo;
+CREATE DATABASE
+postgres=# create database lightweight_todo_dev owner lightweight_todo;
+CREATE DATABASE
+
+# to quit the session
+postgres=# \q
+```
