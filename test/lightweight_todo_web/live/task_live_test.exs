@@ -89,7 +89,9 @@ defmodule LightweightTodoWeb.TaskLiveTest do
     test "marks task as completed and todo in listing", %{conn: conn, task: task} do
       {:ok, index_live, _html} = live(conn, ~p"/tasks")
 
-      assert index_live |> element("#tasks-#{task.id} a", "Mark as completed") |> render_click() =~
+      assert index_live
+             |> element("#tasks-#{task.id} a[aria-label='Mark as completed']")
+             |> render_click() =~
                "Mark as todo"
 
       assert index_live |> element("#tasks-#{task.id} a", "Mark as todo") |> render_click() =~
@@ -108,7 +110,7 @@ defmodule LightweightTodoWeb.TaskLiveTest do
       assert task.id < second_task.id
 
       index_live
-      |> element("#tasks-#{second_task.id} + #tasks-#{task.id} a", "Mark as completed")
+      |> element("#tasks-#{second_task.id} + #tasks-#{task.id} a[aria-label='Mark as completed']")
       |> render_click()
 
       assert index_live

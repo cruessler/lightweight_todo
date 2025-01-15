@@ -24,9 +24,10 @@
   <:action :let={{_id, task}}>
     <.link
       :if={task.status != :completed}
+      aria-label="Mark as completed"
       phx-click={JS.push("mark_as_completed", value: %{id: task.id})}
     >
-      Mark as completed
+      <.icon name="hero-check-circle-solid" />
     </.link>
     <.link
       :if={task.status == :completed}
