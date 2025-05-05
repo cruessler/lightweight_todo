@@ -7,44 +7,48 @@
   </:actions>
 </.header>
 
-<.table
-  id="tasks"
-  rows={@streams.tasks}
-  row_click={fn {_id, task} -> JS.navigate(~p"/tasks/#{task}") end}
->
-  <:col :let={{_id, task}} label="Status">{task.status}</:col>
-  <:col :let={{_id, task}} label="Title">{task.title}</:col>
-  <:col :let={{_id, task}} label="Body">{task.body}</:col>
-  <:action :let={{_id, task}}>
-    <div class="sr-only">
-      <.link navigate={~p"/tasks/#{task}"}>Show</.link>
+<ul id="live-tasks" class="flex flex-col gap-y-6" phx-update="stream">
+  <li :for={{dom_id, task} <- @streams.tasks} id={dom_id}>
+    <div class="flex flex-col">
+      <h2 class="text-md font-semibold">
+        {task.title}
+      </h2>
+
+      <p class="line-clamp-2">
+        {task.body}
+      </p>
+
+      <div>
+        <span class="inline-block px-3 py-1 border rounded-full border-yellow-400 bg-yellow-100">
+          {task.status}
+        </span>
+        <.link navigate={~p"/tasks/#{task}"}>Show</.link>
+        <.link patch={~p"/tasks/#{task}/edit"}>Edit</.link>
+
+        <.link
+          :if={task.status != :completed}
+          aria-label="Mark as completed"
+          phx-click={JS.push("mark_as_completed", value: %{id: task.id})}
+        >
+          <.icon name="hero-check-circle-solid" />
+        </.link>
+        <.link
+          :if={task.status == :completed}
+          phx-click={JS.push("mark_as_todo", value: %{id: task.id})}
+        >
+          Mark as todo
+        </.link>
+
+        <.link
+          phx-click={JS.push("delete", value: %{id: task.id}) |> hide("##{dom_id}")}
+          data-confirm="Are you sure?"
+        >
+          Delete
+        </.link>
+      </div>
     </div>
-    <.link patch={~p"/tasks/#{task}/edit"}>Edit</.link>
-  </:action>
-  <:action :let={{_id, task}}>
-    <.link
-      :if={task.status != :completed}
-      aria-label="Mark as completed"
-      phx-click={JS.push("mark_as_completed", value: %{id: task.id})}
-    >
-      <.icon name="hero-check-circle-solid" />
-    </.link>
-    <.link
-      :if={task.status == :completed}
-      phx-click={JS.push("mark_as_todo", value: %{id: task.id})}
-    >
-      Mark as todo
-    </.link>
-  </:action>
-  <:action :let={{id, task}}>
-    <.link
-      phx-click={JS.push("delete", value: %{id: task.id}) |> hide("##{id}")}
-      data-confirm="Are you sure?"
-    >
-      Delete
-    </.link>
-  </:action>
-</.table>
+  </li>
+</ul>
 
 <.modal :if={@live_action in [:new, :edit]} id="task-modal" show on_cancel={JS.patch(~p"/tasks")}>
   <.live_component
