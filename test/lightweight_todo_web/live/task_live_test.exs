@@ -114,12 +114,12 @@ defmodule LightweightTodoWeb.TaskLiveTest do
       |> render_click()
 
       assert index_live
-             |> element("#tasks-#{second_task.id} + #tasks-#{task.id} td:nth-child(4)")
+             |> element("#tasks-#{second_task.id} + #tasks-#{task.id}")
              |> render() =~
                "Mark as todo"
 
       assert index_live
-             |> element("#tasks-#{second_task.id} + #tasks-#{task.id} td:first-child")
+             |> element("#tasks-#{second_task.id} + #tasks-#{task.id}")
              |> render() =~
                "completed"
 
@@ -128,12 +128,12 @@ defmodule LightweightTodoWeb.TaskLiveTest do
       |> render_click()
 
       assert index_live
-             |> element("#tasks-#{second_task.id} + #tasks-#{task.id} td:nth-child(4)")
+             |> element("#tasks-#{second_task.id} + #tasks-#{task.id}")
              |> render() =~
                "Mark as completed"
 
       assert index_live
-             |> element("#tasks-#{second_task.id} + #tasks-#{task.id} td:first-child")
+             |> element("#tasks-#{second_task.id} + #tasks-#{task.id}")
              |> render() =~
                "created"
     end
