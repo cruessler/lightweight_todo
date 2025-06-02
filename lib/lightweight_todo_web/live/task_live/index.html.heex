@@ -11,11 +11,11 @@
   <li :for={{dom_id, task} <- @streams.tasks} id={dom_id}>
     <div class="flex flex-col">
       <h2 class="text-md font-semibold">
-        {task.title}
+        {raw(Earmark.as_html!(task.title))}
       </h2>
 
       <p class="line-clamp-2">
-        {task.body}
+        {raw(Earmark.as_html!(task.body))}
       </p>
 
       <div>
