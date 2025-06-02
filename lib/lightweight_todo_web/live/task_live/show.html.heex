@@ -9,8 +9,8 @@
 </.header>
 
 <.list>
-  <:item title="Title">{@task.title}</:item>
-  <:item title="Body">{@task.body}</:item>
+  <:item title="Title">{raw(Earmark.as_html!(@task.title))}</:item>
+  <:item title="Body">{raw(Earmark.as_html!(@task.body))}</:item>
 </.list>
 
 <.table
@@ -19,8 +19,8 @@
   row_click={fn {_id, task} -> JS.navigate(~p"/tasks/#{task}") end}
 >
   <:col :let={{_id, task}} label="Status">{task.status}</:col>
-  <:col :let={{_id, task}} label="Title">{task.title}</:col>
-  <:col :let={{_id, task}} label="Body">{task.body}</:col>
+  <:col :let={{_id, task}} label="Title">{raw(Earmark.as_html!(task.title))}</:col>
+  <:col :let={{_id, task}} label="Body">{raw(Earmark.as_html!(task.body))}</:col>
 </.table>
 
 <.back navigate={~p"/tasks"}>Back to tasks</.back>
