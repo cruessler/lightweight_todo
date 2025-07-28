@@ -22,9 +22,10 @@ defmodule LightweightTodo.Tasks.Task do
   @doc false
   def changeset(task, attrs) do
     task
-    |> cast(attrs, [:title, :body, :status])
+    |> cast(attrs, [:title, :body, :status, :parent_id])
     |> validate_required([:title])
     |> assoc_constraint(:user)
+    |> assoc_constraint(:parent)
   end
 
   def compare_by_status(a, b) do

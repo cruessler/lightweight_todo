@@ -19,6 +19,7 @@ defmodule LightweightTodoWeb.TaskLive.FormComponent do
         phx-change="validate"
         phx-submit="save"
       >
+        <.input field={@form[:parent_id]} type="hidden" />
         <.input field={@form[:title]} type="text" label="Title" />
         <.input field={@form[:body]} type="textarea" label="Body" />
         <:actions>

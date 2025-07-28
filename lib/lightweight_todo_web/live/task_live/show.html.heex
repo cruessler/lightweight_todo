@@ -2,6 +2,9 @@
   Task {@task.id}
   <:subtitle>This is a task record from your database.</:subtitle>
   <:actions>
+    <.link patch={~p"/tasks/#{@task}/tasks/new"}>
+      <.button>New Subtask</.button>
+    </.link>
     <.link patch={~p"/tasks/#{@task}/show/edit"} phx-click={JS.push_focus()}>
       <.button>Edit task</.button>
     </.link>
@@ -33,6 +36,19 @@
     title={@page_title}
     action={@live_action}
     task={@task}
+    patch={~p"/tasks/#{@task}"}
+  />
+</.modal>
+
+<.modal :if={@live_action == :new} id="task-modal" show on_cancel={JS.patch(~p"/tasks/#{@task}")}>
+  <.live_component
+    module={LightweightTodoWeb.TaskLive.FormComponent}
+    user={@current_user}
+    id={@sub_task.id || :new}
+    parent_id={@task.id}
+    title={@page_title}
+    action={@live_action}
+    task={@sub_task}
     patch={~p"/tasks/#{@task}"}
   />
 </.modal>

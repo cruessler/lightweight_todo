@@ -72,6 +72,7 @@ defmodule LightweightTodoWeb.Router do
       live "/tasks/:id/edit", TaskLive.Index, :edit
 
       live "/tasks/:id", TaskLive.Show, :show
+      live "/tasks/:id/tasks/new", TaskLive.Show, :new
       live "/tasks/:id/show/edit", TaskLive.Show, :edit
     end
   end
