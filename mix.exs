@@ -51,7 +51,7 @@ defmodule LightweightTodo.MixProject do
       {:telemetry_poller, "~> 1.0"},
       {:gettext, "~> 1.0"},
       {:jason, "~> 1.2"},
-      {:dns_cluster, "~> 0.1.1"},
+      {:dns_cluster, "~> 0.3.0"},
       {:plug_cowboy, "~> 2.5"},
       {:earmark, "~> 1.4"},
       {:mix_test_watch, "~> 1.0", only: [:dev, :test], runtime: false}
